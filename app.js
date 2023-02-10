@@ -22,6 +22,8 @@ app.get("/signup",(request,response)=>{
 app.get("/login",(request,response)=>{
     response.render("signin.ejs")
 });
-
+app.get("*",(request,response)=>{
+    response.render("error.ejs")
+})
 //start application
 app.listen(3000);
