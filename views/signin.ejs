@@ -11,6 +11,19 @@
     <title>Login To Your account</title>
   </head>
   <body>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="bsToast">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img id="assistantImage" class="rounded me-2" width="40px" alt="assistant">
+        <strong class="me-auto" id="assistantName">Assistant</strong>
+        <small>Just Now</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="toastEl">
+
+      </div>
+    </div>
+  </div>
     <div class="container-fluid shadow-lg">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
           <div class="container-fluid">
@@ -41,23 +54,24 @@
       </div>
     <div class="container mt-5">
       <div class="col-5 mx-auto">
-        <form action="" class=" border border-2 p-5 rounded-3">
+        <form action="" class=" border border-2 p-5 rounded-3" id="userData" method="post">
             <h3 class="mb-3 text-center">Login To see Awesome AniParadise</h3>
             <div class="mb-3">
-                <label for="" class="form-label">Your Email</label>
-                <input type="email" class=" form-control">
+                <label for="" class="form-label">Your Username</label>
+                <input type="text" name="userName" class=" form-control" id="userNameInput">
             </div>
             <div class="mb-3">
                 <label for="" class="form-label">Your Password</label>
-                <input type="password" class=" form-control">
+                <input type="password" name="userPassword" class=" form-control" id="userPasswordInput">
             </div>
             <div class=" text-center">
-                <button class="btn btn-dark">Login</button>
+                <button class="btn btn-dark" id="userBtn">Login</button>
             </div>
+            
         </form>
       </div>
     </div>
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
-  <script src="js/signin.js"></script>
+  <script src="js/signup.js"></script>
 </html>

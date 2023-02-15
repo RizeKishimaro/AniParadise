@@ -1,7 +1,6 @@
 {
   "name": "lizzy-loose",
   "version": "1.0.0",
-  "description": "",
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,11 +9,24 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.3",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "mysql": "^2.18.1",
-    "mysql2": "^3.1.2"
-  }
+    "mysql2": "^3.1.2",
+    "nodemon": "^2.0.20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RizeKishimaro/AniParadise.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RizeKishimaro/AniParadise/issues"
+  },
+  "homepage": "https://github.com/RizeKishimaro/AniParadise#readme",
+  "description": ""
 }
