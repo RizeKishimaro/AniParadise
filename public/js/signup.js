@@ -33,10 +33,11 @@ const assistants = [
     message: "Senpai won't like this.",
   },
 ];
+
 assistantName.innerText = assistants[num].name;
 assistant.setAttribute("src", assistants[num].src);
 toastEl.innerHTML = `<p>${messages[messageNum]}</p>`;
-bsToastEl.addEventListener("shown.bs.toast", () => {
+bsToastEl.addEventListener("hidden.bs.toast", () => {
   messageNum = Math.round(Math.random() * 3);
   num = Math.round(Math.random() * 1);
   assistant.setAttribute("src", assistants[num].src);

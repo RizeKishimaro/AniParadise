@@ -47,3 +47,57 @@
 <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="./script.js"></script>
 </html>
+
+
+
+
+
+
+
+
+else {
+              dbconf.query(
+                `INSERT INTO users (first_name,last_name,full_name,password) VALUES ("${firstName}","${lastName}","${userName}","${securedPassword}");`,
+                (error, result, feilds) => {
+                  if (!error) {
+                    response.redirect("/login");
+                  }
+                  console.log(result);
+                }
+              );
+              console.log("signUp success");
+              connection.end();
+            }
+
+////auth code
+dbconf.query(
+      `SELECT full_name,password from users where full_name="${userName}"`,
+      (error, result, fields) => {
+        if (error) {
+          console.log("login failed" + error);
+        }
+        // else if(result[0].length === 0){
+        //     res.redirect("/error");
+        //     res.status(403);
+        // }
+        else {
+          try {
+            bcrypt.compare(userPassword, result[0].password, (err, result) => {
+              if (result) {
+                res.redirect("/?auth=true");
+                success = true;
+              } else {
+                res.send(
+                  "User Name or Password is wrong Or doesn't exist in the database!"
+                );
+              }
+            });
+          } catch (error) {
+            if (error) {
+              res.status(403);
+              res.redirect("/error");
+            }
+          }
+        }
+      }
+    );

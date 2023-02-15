@@ -10,6 +10,7 @@
 </head>
 
 <body>
+  
   <div class="container-fluid shadow-lg">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
@@ -52,8 +53,9 @@
       </div>
     </div>
   </div>
+  
   <div class="container">
-    <div class="col-5 mx-auto mt-5">
+    <div class="col-11 col-lg-5 mx-auto mt-5">
       <form action="" class="mx-auto border border-3 rounded-3 p-5" id="userData" method="post">
         <h3 class=" text-center">Sign Up To Start Your Journey</h3>
         <div class=" d-flex justify-content-between mb-3">
@@ -83,5 +85,14 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
 <script src="js/signup.js"></script>
-
+<% if(failed){ %>
+      
+  <script>
+    
+    toastEl.innerHTML = `<p class='text-break'>The Username you enter is Exist in Ani database (¬_¬")<img src='img/yay.gif' width='40px' class='ms-auto'></p>`
+    bsToast.show()
+  </script>
+} 
+  
+<%} %>
 </html>
