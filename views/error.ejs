@@ -40,7 +40,11 @@
             >
               <p class="w-50 text-start">
                 If you'd like to know more, you can search online later for this
-                error: 0OOPSIE_WOOPSIE
+                error: <% if(err_message) {%>
+                  <span><%= err_message %></span>
+                <%  }else{%>
+                  <span>00PSIE W00PSIE</span>
+                  <% } %>
               </p>
             </div>
             <button

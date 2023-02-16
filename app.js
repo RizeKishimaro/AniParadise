@@ -13,33 +13,41 @@ const session = require("express-session");
 //functions
 function validate(authUserName, authUserPassword, mysql, req, res, bcrypt) {
   mysql.query(
-    `SELECT full_name,password from users where full_name="${authUserName}"`,
-    (error, result, fields) => {
-      if (error) {
-        console.log("login failed" + error);
-      } else {
-        try {
-          bcrypt.compare(
-            authUserPassword,
-            result[0].password,
-            (err, result) => {
-              if (result) {
-                success = true;
-                req.session.logged = true;
-                res.redirect("/")
-              } else {
-                res.send(
-                  "User Name or Password is wrong Or doesn't exist in the database!"
-                );
+    `SELECT full_name,password from users where full_name=?`,
+    authUserName,
+    async (error, result, fields) => {
+      console.log(result.length)
+      if(result.length > 0){
+        if (error) {
+          console.log("login failed" + error);
+        } else {
+          try {
+            await bcrypt.compare(
+              authUserPassword,
+              result[0].password,
+              (err, result) => {
+                if (result) {
+                  success = true;
+                  req.session.logged = true;
+                  res.redirect("/");
+                } else {
+                  res.send(
+                    "User Name or Password is wrong Or doesn't exist in the database!"
+                  );
+                }
               }
+            );
+          } catch (error) {
+            if (error) {
+              const message = error;
+              err_message = message;
+              res.redirect("/error/" + message);
             }
-          );
-        } catch (error) {
-          if (error) {
-            res.status(403);
-            res.redirect("/error");
           }
         }
+      }else{
+        const data = {error: 'Database error occured'};
+        res.status(500).json(data);
       }
     }
   );
@@ -55,17 +63,23 @@ function checkUser(
   mysql
 ) {
   mysql.query(
-    `SELECT full_name FROM users WHERE full_name = "${cusUserName}"`,
+    `SELECT full_name FROM users WHERE full_name = ?`,
+    cusUserName,
     (error, result, fields) => {
       try {
         if (result.length === 0) {
           mysql.query(
-            `INSERT INTO users (first_name,last_name,full_name,password) VALUES ("${cusFirstName}","${cusLastName}","${cusUserName}","${hashedPassword}");`,
+            `INSERT INTO users (first_name,last_name,full_name,password) VALUES (?,?,?,"${hashedPassword}");`,
+            [cusFirstName, cusLastName, cusUserName],
             (error, result, feilds) => {
               if (!error) {
                 response.redirect("/login");
                 login_true = true;
                 console.log(request.session.logged);
+              } else {
+                const message = error.code;
+                err_message = message;
+                response.redirect("/error/" + message);
               }
               console.log(result);
             }
@@ -77,7 +91,9 @@ function checkUser(
           failed = true;
         }
       } catch (error) {
-        if (error) throw error;
+        const message = error.code;
+        err_message = message;
+        response.redirect("/error/" + message);
       }
     }
   );
@@ -87,7 +103,7 @@ function checkUser(
 success = false;
 login_true = false;
 failed = false;
-
+err_message = null;
 //configuration for security with dot env
 env.config();
 
@@ -151,8 +167,9 @@ app.post("/login", async (req, res) => {
     //csrf protection
     validate(userName, userPassword, dbconf, req, res, bcrypt);
   } catch (error) {
-    throw error;
-    console.log(error);
+    const message = error.code;
+    err_message = message;
+    res.redirect("/error/" + message);
   }
 });
 
@@ -161,9 +178,9 @@ app.use(express.static("public"));
 
 //filesystem configurations
 app.get("/", (request, response) => {
-  if(request.session.logged){
+  if (request.session.logged) {
     response.render("index.ejs");
-  }else{
+  } else {
     response.send(
       "<h1>403 FORBIDDEN!</h1><p>You don't have any permission to ask this url you sussy baka!</p><a href='/login'>Login Aniparadise</a>"
     );
@@ -171,29 +188,31 @@ app.get("/", (request, response) => {
 });
 
 app.get("/signup", (request, response) => {
-  if(request.session.logged){
-    response.redirect("/")
-  }else{
+  if (request.session.logged) {
+    response.redirect("/");
+  } else {
     response.render("signup.ejs");
   }
 });
 app.get("/login", (request, response) => {
-  if(request.session.logged){
-    response.redirect("/")
-  }else{
-  response.render("signin.ejs");
+  if (request.session.logged) {
+    response.redirect("/");
+  } else {
+    response.render("signin.ejs");
   }
 });
-app.get("/logout",(request,response)=>{
-  request.session.destroy((err)=>{
-    if(err){
-      response.send("{error: 'ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'count() users where 1' at line 1'}")
-    }else{
+app.get("/logout", (request, response) => {
+  request.session.destroy((err) => {
+    if (err) {
+      response.send(
+        "{error: 'ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'count() users where 1' at line 1'}"
+      );
+    } else {
       response.redirect("/login");
     }
-  })
-})
-app.get("/error", (request, response) => {
+  });
+});
+app.get("/error/:message", (request, response) => {
   response.render("error.ejs");
 });
 app.get("*", (request, response) => {
