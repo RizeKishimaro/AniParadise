@@ -3,21 +3,42 @@ const Events = require("events");
 const mysql = require("mysql2");
 const env = require("dotenv");
 const app = express();
+const multer = require("multer");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const dbconf = require("./db.conf");
 const session = require("express-session");
+const { title } = require("process");
 // const validate = require("./api/authnicate");
 // const checkUser = require("./api/insertUsers");
-
+u_filename = null;
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/img/movies/");
+  },
+  filename: function (req, file, cb) {
+    const fileExt = path.extname(file.originalname);
+    const fileName =
+      file.originalname
+        .replace(fileExt, "")
+        .toLowerCase()
+        .split(" ")
+        .join("-") +
+      "-" +
+      Date.now();
+    u_filename = fileName + fileExt;
+    cb(null, fileName + fileExt);
+  },
+});
+const upload = multer({ storage: storage });
 //functions
 function validate(authUserName, authUserPassword, mysql, req, res, bcrypt) {
   mysql.query(
     `SELECT full_name,password from users where full_name=?`,
     authUserName,
     async (error, result, fields) => {
-      console.log(result.length)
-      if(result.length > 0){
+      console.log(result.length);
+      if (result.length > 0) {
         if (error) {
           console.log("login failed" + error);
         } else {
@@ -29,6 +50,7 @@ function validate(authUserName, authUserPassword, mysql, req, res, bcrypt) {
                 if (result) {
                   success = true;
                   req.session.logged = true;
+                  req.session.user = authUserName
                   res.redirect("/");
                 } else {
                   res.send(
@@ -45,8 +67,8 @@ function validate(authUserName, authUserPassword, mysql, req, res, bcrypt) {
             }
           }
         }
-      }else{
-        const data = {error: 'Database error occured'};
+      } else {
+        const data = { error: "Database error occured" };
         res.status(500).json(data);
       }
     }
@@ -120,6 +142,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: false,
+      maxAge: 4 * 24 * 60 * 60 * 1000
     },
   })
 );
@@ -177,12 +200,14 @@ app.post("/login", async (req, res) => {
 app.use(express.static("public"));
 
 //filesystem configurations
+
+///public from SSR
 app.get("/", (request, response) => {
   if (request.session.logged) {
     response.render("index.ejs");
   } else {
     response.send(
-      "<h1>403 FORBIDDEN!</h1><p>You don't have any permission to ask this url you sussy baka!</p><a href='/login'>Login Aniparadise</a>"
+      "<title>Stop you sussy baka</title><h1>403 FORBIDDEN!</h1><p>You don't have any permission to ask this url you sussy baka!</p><a href='/login'>Login Aniparadise</a>"
     );
   }
 });
@@ -215,13 +240,55 @@ app.get("/logout", (request, response) => {
 app.get("/error/:message", (request, response) => {
   response.render("error.ejs");
 });
+//reasign global variable
+
+failed = false;
+
+//api configuration
+
+//assign API END POINT
+app.delete("/api/delete", (request, response) => {
+  console.log("delete api called");
+});
+app.get("/addmovies", (request, response) => {
+  response.render("addProducts.ejs");
+});
+app.post("/addmovies", upload.single("file"), (request, response) => {
+  const serverInfo = {
+    protocol: request.protocol,
+    hostname: request.hostname,
+    port: request.socket.localPort,
+  };
+  const pName = request.body.pName;
+  const image = `${serverInfo.protocol}://${serverInfo.hostname}:${serverInfo.port}/img/movies/${request.file.filename}`;
+  console.log(image);
+  const movieDesc = request.body.movieDesc;
+  const movieType = request.body.movieType;
+  const rating = request.body.rating;
+  dbconf.query(
+    `INSERT INTO movie_api(title,image,description,type,rating) VALUES(?,?,?,?,?)`,
+    [pName, image, movieDesc, movieType, rating],
+    (err, result, fields) => {
+      if (err) {
+        console.log(err);
+      } else {
+        response.redirect("/addmovies");
+      }
+    }
+  );
+});
+app.get("/api/movies", (request, response) => {
+  response.setHeader("Content-Type","application/json")
+  dbconf.query("SELECT * FROM movie_api LIMIT 20", (error, result, fields) => {
+    response.send(result)
+    response.end();
+  });
+});
 app.get("*", (request, response) => {
   response.render("error.ejs");
   // console.log(request);
 });
-//reasign global variable
 
-failed = false;
 //start application
 
 app.listen(3000);
