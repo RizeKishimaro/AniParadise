@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="http://127.0.0.1:3000/css/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://127.0.0.1:3000/css/bootstrap-icons/font/bootstrap-icons.css">
+  <title>Admin Dashboard</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-primary">
+    <div class="container-fluid">
+      <div class="text-center">
+        <img src="http://127.0.0.1:3000//img/lum.jpg" class="border border-3 border-white rounded-2" alt="lum" width="50px">
+        <a class="navbar-brand text-white ms-2" href="/">AniParadise</a>
+      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100 d-flex">
+          <li class="nav-item">
+            <a class="nav-link active text-white" aria-current="page" href="/admin/index">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white-50" href="#">Link</a>
+          </li>
+        </ul>
+        <div class="ms-auto me-3 d-flex justify-content-center align-items-center">
+          <a href="/messages" class=" me-3 text-center">
+            <i class=" bi bi-mailbox text-white-50 fs-4">
+            </i>
+          </a>
+          <a href="/notifications" class=" me-3">
+            <i class="bi bi-bell text-white-50 fs-4">
+            </i>
+          </a>
+          <ul class="list-group list-unstyled">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="http://127.0.0.1:3000/img/lum.jpg" width="30px" alt="lum"> Assistant Lum
+              </a>
+              <ul class="dropdown-menu dropdown-menu-start">
+                <li><a class="dropdown-item" href="/admin/profile">Profile</a></li>
+                <li>
+                  <a class="dropdown-item" href="/admin/setting">Setting</a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/logout">Logout</a>
+                </li>
+              </ul>
+          </ul>
+          </li>
+        </div>
+      </div>
+  </nav>
+  </div>
+  <div class="container-fluid" style="height: 500px;background-color: rgb(71, 135, 237);">
+    <div class="container">
+      <h2 class="text-white">Admin Profile</h2>
+      <div class="row mt-5 justify-content-center">
+        <div class="col-3  text-center">
+          <img src="http://127.0.0.1:3000/img/nagatoro.jpeg" alt="admin" width="250px" class="border border-5 border-dark rounded-circle mt-3">
+          <div class=" text-center text-white mt-3">
+            <h4>Miss Nagatoro</h4>
+            <p>Hi i'm Miss Nagatoro.I'm Bullying My Senpai All the time.</p>
+          </div>
+        </div>
+        <div class="col-8">
+          <h3>About Me</h3>
+          <ul class=" list-group">
+            <li class="mb-3 list-group-item p-3">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatibus exercitationem aperiam modi dolor ipsa repellendus culpa, libero fugiat rem dolore incidunt. Soluta ratione, exercitationem nesciunt sed iusto amet ducimus ex voluptatem similique? Molestiae ab aliquam nemo pariatur. Quia non numquam nostrum animi praesentium saepe et distinctio modi nam officia iusto perferendis eum atque temporibus voluptatibus vitae, mollitia quidem qui aperiam?</li>
+          </ul>
+          <div class="row">
+            <div class="col-4 mt-3">
+              <h4 class="text-center">Company Budget</h4>
+              <canvas id="score" width="100%"></canvas>
+            </div>
+            <div class="col-4 mt-3">
+              <h4 class="text-center">Management</h4>
+              <canvas id="sport"></canvas>
+            </div>
+            <div class="col-4 mt-3">
+              <h4 class="text-center">Management</h4>
+              <canvas id="total"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script>
+  const data = {
+    labels: [
+      "Bad",
+      "Great",
+      "Good"
+    ],
+    datasets: [{
+      label: 'Budget',
+      data: [100, 125, 700],
+      backgroundColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)'
+      ],
+      hoverOffset: 4
+    }]
+  };
+  const config = {
+    type: 'doughnut',
+    data: data,
+  };
+  const sportScore = {
+    labels: [
+      "Bad",
+      "Great",
+      "Good"
+    ],
+    datasets: [{
+      label: 'Management',
+      data: [270, 300, 700],
+      backgroundColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)'
+      ],
+      hoverOffset: 4
+    }]
+  };
+  const sport = {
+    type: 'doughnut',
+    data: sportScore,
+  };
+  const total = {
+    labels: [
+      "Bad",
+      "Great",
+      "Good"
+    ],
+    datasets: [{
+      label: 'Total Budget',
+      data: [100, 421, 900],
+      backgroundColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)'
+      ],
+      hoverOffset: 4
+    }]
+  };
+  const totalcfg = {
+    type: 'line',
+    data: total,
+  };
+  new Chart(document.querySelector("#score"), config);
+  new Chart(document.querySelector("#sport"), sport);
+  new Chart(document.querySelector("#total"), totalcfg)
+</script>
+
+</html>
