@@ -19,5 +19,18 @@ class API {
       }
     })
   }
+  getData(query,callback){
+    mysql.getData(query,(error,result,fields)=>{
+      callback(error,result);
+    })
+  }
+  getQueryData(query,values,func){
+    mysql.getQueryData(query,values,(error,result,fields)=>{
+      func(error,result);
+      console.log(query);
+      console.log(result);
+      console.log(values);
+    })
+  }
 }
 export default API;

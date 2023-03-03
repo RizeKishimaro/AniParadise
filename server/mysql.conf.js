@@ -35,7 +35,22 @@ signUpUsers(data,resultFunc){
     }
   })
 }
-
+getData(query,callback){
+  const connection = this.connectPool(1);
+  connection.query(query,(error,result,fields)=>{
+    callback(error,result,fields);
+  });
+}
+getQueryData(query,value,callback){
+  const connection = this.connectPool(10);
+  connection.query(query,value,(error,result,fields)=>{
+    callback(error,result,fields);
+    // console.log(result+ value+"mysql");
+    // console.log(query);
+    console.log(result);
+    
+  });
+}
 checkLogin(username,password,resultFunc){
     const connection = this.connectPool(10);
    connection.query("SELECT full_name,password FROM users WHERE full_name=?",[username],(error,result,fields)=>{
